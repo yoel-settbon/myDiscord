@@ -1,31 +1,21 @@
 CC = gcc
-CFLAGS = -Wall `pkg-config --cflags gtk4`
-LDFLAGS = `pkg-config --libs gtk4`
+CFLAGS = -Wall
+LDFLAGS = -lws2_32
 
-# Fichiers
-CLIENT_SRCS = client/main.c client/client_socket.c
-SERVER_SRCS = server/main.c server/server_socket.c server/connection_handler.c
-COMMON_SRCS = common/utils.c
-CRYPTO_SRCS = crypto/crypto.c
-DB_SRCS = database/db.c
-
-# Liens
-CLIENT_OBJS = $(CLIENT_SRCS) $(COMMON_SRCS)
-SERVER_OBJS = $(SERVER_SRCS) $(COMMON_SRCS) $(CRYPTO_SRCS) $(DB_SRCS)
-
-# Noms des binaires
-CLIENT_BIN = myDiscord_client.exe
-SERVER_BIN = myDiscord_server.exe
+CLIENT_SRC = client/main.c
+SERVER_SRC = server/main.c
+CLIENT_BIN = client.exe
+SERVER_BIN = server.exe
 
 all: $(CLIENT_BIN) $(SERVER_BIN)
 
-$(CLIENT_BIN): $(CLIENT_OBJS)
+$(CLIENT_BIN): $(CLIENT_SRC)
 	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
-$(SERVER_BIN): $(SERVER_OBJS)
-	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS) -lpthread
+$(SERVER_BIN): $(SERVER_SRC)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
 
 clean:
-	del *.exe
+	rm -f *.exe
 
 .PHONY: all clean
