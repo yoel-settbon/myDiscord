@@ -1,0 +1,7 @@
+{
+    "files.associations": {
+        "Mydiscord.C": "cpp",
+        "TEST.C": "cpp"
+    },
+    "files.autoSave": "onFocusChange"
+}
