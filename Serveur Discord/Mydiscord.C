@@ -164,9 +164,13 @@ static void show_alert(GtkWindow *parent, const char *title, const char *message
 static void on_send_message(GtkWidget *widget, gpointer user_data) {
     GtkWidget *entry = GTK_WIDGET(user_data);
     const char *text = gtk_entry_buffer_get_text(gtk_entry_get_buffer(GTK_ENTRY(entry)));
+    
     if (strlen(text) > 0) {
-
         send(sock_client, text, strlen(text), 0);
+        
+        char local_message[MAX_MESSAGE_LENGTH];
+        snprintf(local_message, sizeof(local_message), "Vous: %s", text);
+        append_message(local_message);
         
         if (current_user_id != -1) {
             char user_id_str[16];
@@ -232,6 +236,8 @@ static void show_chat_window(GtkApplication *app, PGconn *conn, int user_id) {
     gtk_frame_set_child(GTK_FRAME(chat_frame), chat_box);
     
     GtkWidget *messages_scroll = gtk_scrolled_window_new();
+    gtk_widget_set_hexpand(messages_scroll, TRUE);
+    gtk_widget_set_vexpand(messages_scroll, TRUE);
     gtk_box_append(GTK_BOX(chat_box), messages_scroll);
     
     GtkWidget *messages_view = gtk_text_view_new();
@@ -340,7 +346,7 @@ static void activate(GtkApplication *app, gpointer user_data) {
 
     GtkWidget *window = gtk_application_window_new(app);
     gtk_window_set_title(GTK_WINDOW(window), "MyDiscord - Connexion");
-    gtk_window_set_default_size(GTK_WINDOW(window), 400, 300);
+    gtk_window_set_default_size(GTK_WINDOW(window), 1200, 800);
     gtk_window_set_resizable(GTK_WINDOW(window), FALSE);
 
     GtkWidget *main_box = gtk_box_new(GTK_ORIENTATION_VERTICAL, 10);
